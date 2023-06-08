@@ -1,0 +1,147 @@
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.8.0/html2pdf.bundle.js" integrity="sha512-VqCeCECsaE2fYTxvPQk+OJ7+SQxzI1xZ6IqxuWd0GPKaJoeSFqeakVqNpMbx1AArieciBF71poL0dYTMiNgVxA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Operaciones</title>
+  <style>
+    #formContainer {
+      display: none;
+    
+      overflow: hidden;
+  
+    }
+
+    #formContainer.show {
+      display: block;
+     
+    }
+
+    .content-wrapper {
+      background-image: url('/img/pnel.jpg');
+      background-repeat: repeat;
+      width: 80%;
+      margin: 0 auto;
+      padding: 20px;
+      min-height: 900px
+    }
+  </style>
+  </style>
+</head>
+<body>
+<div id="html2pdf">
+  <div class="wrapper">
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+
+      <h1>Ingrese sus datos</h1>
+
+      <button id="toggleButton">Mostrar formulario</button>
+
+      <div id="formContainer">
+        <form id="sumForm">
+          <label for="num1">Radiación solar de tu ciudad (Sincelejo tiene una de 4.5kWh/m²):</label>
+          <input type="Number" step="0.01" id="num1" name="num1" required><br>
+
+          <label for="num2">Ingrese la potencia del panel solar de su elección (W):</label>
+          <input type="Number" step="0.01" id="num2" name="num2" required><br>
+
+          <label for="num3">Ingrese el precio del panel solar de su elección (COP):</label>
+          <input type="Number" step="0.01" id="num3" name="num3" required><br>
+
+          <p>Ahora digite la potencia media (kW/mes) de cada uno de los últimos 6 meses que aparece en su recibo</p>
+
+          <label for="R1">Recibo 1:</label>
+          <input type="Number" step="0.01" id="R1" name="R1" required><br>
+
+          <label for="R2">Recibo 2:</label>
+          <input type="Number" step="0.01" id="R2" name="R2" required><br>
+
+          <label for="R3">Recibo 3:</label>
+          <input type="Number" step="0.01" id="R3" name="R3" required><br>
+
+          <label for="R4">Recibo 4:</label>
+          <input type="Number" step="0.01" id="R4" name="R4" required><br>
+
+          <label for="R5">Recibo 5:</label>
+          <input type="Number" step="0.01" id="R5" name="R5" required><br>
+
+          <label for="R6">Recibo 6:</label>
+          <input type="Number" step="0.01" id="R6" name="R6" required><br>
+
+          <input type="submit" value="Calcular datos">
+        </form>
+
+        <div id="result" style="display: none;">
+            
+          <h2>Resultado:</h2>
+        </div>
+        <div id="sop" style="display: none;"></div>
+        <div id="sopu" style="display: none;"></div>
+      </div>
+
+      <script>
+        const toggleButton = document.getElementById('toggleButton');
+        const formContainer = document.getElementById('formContainer');
+        const sumForm = document.getElementById('sumForm');
+        const resultDiv = document.getElementById('result');
+        const otroDiv = document.getElementById('result');
+        const lol = document.getElementById('sop');
+         const lo = document.getElementById('sopu');
+
+        toggleButton.addEventListener('click', function() {
+          formContainer.classList.toggle('show');
+          if (formContainer.classList.contains('show')) {
+            toggleButton.textContent = 'Ocultar formulario';
+          } else {
+            toggleButton.textContent = 'Mostrar formulario';
+          }
+        });
+
+        sumForm.addEventListener('submit', function(event) {
+          event.preventDefault();
+
+          const num1 = parseFloat(document.getElementById('num1').value);
+          const num3 = parseFloat(document.getElementById('num3').value);
+          const R1 = parseFloat(document.getElementById('R1').value);
+          const R2 = parseFloat(document.getElementById('R2').value);
+          const R3 = parseFloat(document.getElementById('R3').value);
+          const R4 = parseFloat(document.getElementById('R4').value);
+          const R5 = parseFloat(document.getElementById('R5').value);
+          const R6 = parseFloat(document.getElementById('R6').value);
+          const num2 = parseFloat(document.getElementById('num2').value);
+
+          const sum = (R1 + R2 + R3 + R4 + R5 + R6) * (1000) / (6 * 30);
+          const Pnl = (sum * 1.3) / (num2 * num1);
+          const resultadoreal = Math.ceil(Pnl)
+          const inversor = resultadoreal*num2
+          const precio = num3*resultadoreal
+
+          resultDiv.style.display = 'block';
+          resultDiv.innerHTML = "<h2>Necesitas un inversor de al menos:</h2>" + "<p> " + inversor + "W</p>";
+
+          lol.style.display = 'block';
+          lol.innerHTML = "<h2>El numero de paneles necesitados es de:</h2>" + "<p> " + resultadoreal + " paneles</p>";
+
+          lo.style.display = 'block';
+          lo.innerHTML = "<h2>El Precio total a pagar es de:</h2>" + "<p> " + precio + "$</p>";
+          
+        });
+      </script>
+    </div>
+  </div>
+  
+    
+</div>
+<div style="padding: 0 50 px;">
+ <button style="padding: 10px;" id="exportPDF">Reportar datos </button> </div>
+ 
+
+</body>
+<script>
+    let htmlPDF = document.getElementById("html2pdf");
+    let exportPDF = document.getElementById("exportPDF");
+    exportPDF.onclick = (e) => html2pdf(htmlPDF);
+ </script>
+
+
+</html>
